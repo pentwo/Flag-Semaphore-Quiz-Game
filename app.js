@@ -1,7 +1,8 @@
 const QUIZ_DIGIT = 4;
-const QUIZ_SPEED = 300;
-const answerEle = document.querySelector('.answers');
-const quizEle = document.querySelector('.quizImages');
+let QUIZ_SPEED = 800;
+const answersEle = document.querySelector('.answers__inputs');
+const answerInputs = document.querySelectorAll('.answers__input');
+const quizEle = document.querySelector('.quiz__images');
 const quiz = [];
 
 let quizPlaying = false;
@@ -20,22 +21,37 @@ const imageFileArray = [
   'Semaphore_Ready.svg',
 ];
 
+function toggleCheatSheet() {
+  const cheatSheet = document.querySelector('.cheatSheet');
+  console.log('cheatSheet: ', cheatSheet);
+  cheatSheet.classList.toggle('hide');
+}
+
 function jump(ele, content) {
   const next = ele.tabIndex;
-  if (!answerEle.children[next]) return;
-  if (
-    (event.keyCode >= 48 && event.keyCode <= 57) ||
-    (event.keyCode >= 96 && event.keyCode <= 105)
-  ) {
-    answerEle.children[next].select();
+
+  if (answersEle.children[next] !== undefined) {
+    console.log('answersEle.children[next]: ', answersEle.children[next]);
+    if (
+      (event.keyCode >= 48 && event.keyCode <= 57) ||
+      (event.keyCode >= 96 && event.keyCode <= 105)
+    ) {
+      answersEle.children[next].select();
+    } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+      ele.select();
+    }
+  }
+  if (event.keyCode === 13) {
+    handleCheckAnswer();
   }
 }
 
-function selectNumber(element) {
-  element.select();
+function changeSpeed(speed) {
+  QUIZ_SPEED = speed;
 }
-
 function handleGenerateQuiz() {
+  if (quizPlaying) return;
+
   const quizNumber = generateQuiz(quiz);
   displayQuiz(0, quizNumber, quizEle);
 }
@@ -53,8 +69,6 @@ function generateQuiz(quizArray) {
     <img src="img/${imageFileArray[i]}" alt="${i}">
     `;
   });
-
-  // quizEle.innerHTML = html;
 }
 
 function resetInput(elements) {
@@ -68,14 +82,14 @@ function resetInput(elements) {
 function displayQuiz(i, quizArray, bom) {
   quizPlaying = true;
 
-  bom.innerHTML = `<img src="img/${imageFileArray[10]}" alt="ready">`;
   if (i < QUIZ_DIGIT * 2) {
     bom.innerHTML = quizArray[i];
     setTimeout(() => displayQuiz(i + 1, quizArray, bom), QUIZ_SPEED);
   } else {
     quizPlaying = false;
   }
-  resetInput(document.querySelectorAll('.answer'));
+  removeDisable(answerInputs);
+  resetInput(answerInputs);
 }
 
 function handleCheckAnswer() {
@@ -83,22 +97,21 @@ function handleCheckAnswer() {
     return;
   }
   const quizChecks = quiz.filter(i => i < 10);
-  const inputs = [...document.querySelectorAll('.answer')];
+  const inputs = [...answerInputs];
   const answers = inputs.map(i => parseInt(i.value));
   // const result = [];
 
-  console.log('answers: ', answers);
-  console.log(`quizChecks:`, quizChecks);
+  // console.log('answers: ', answers);
+  // console.log(`quizChecks:`, quizChecks);
   const results = answers.map((answer, index) => {
     return answer === quizChecks[index];
   });
-  console.log('results: ', results);
-
-  setValidation(results, inputs);
+  // console.log('results: ', results);
+  if (quizChecks.length >= QUIZ_DIGIT) setValidation(results, inputs);
 }
 
 function setValidation(results, elements) {
-  // console.log('result, elements: ', results, elements);
+  resetInput(elements);
   results.map((result, index) => {
     if (!result) {
       elements[index].setAttribute('aria-wrong', 'true');
@@ -106,4 +119,21 @@ function setValidation(results, elements) {
       elements[index].setAttribute('aria-correct', 'true');
     }
   });
+}
+
+function handlePlayInput() {
+  const inputs = [];
+  [...answerInputs].map(i => {
+    return inputs.push(parseInt(i.value), 10);
+  });
+  const inputsHTML = inputs.map(
+    i => `<img src="img/${imageFileArray[i]}" alt="${i}">`,
+  );
+  if (inputs.length === QUIZ_DIGIT * 2) {
+    displayQuiz(0, inputsHTML, quizEle);
+  }
+}
+
+function removeDisable(elements) {
+  [...elements].map(i => i.removeAttribute('disabled'));
 }

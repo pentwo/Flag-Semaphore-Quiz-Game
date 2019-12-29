@@ -11,9 +11,10 @@
 </head>
 <body>
 <body>
+  <div class="container">
   <h1>Flag Semaphore</h1>
-
-  <div class="cheatSheet">
+  <button class="btn" onclick="toggleCheatSheet()">Cheat Sheet</button>
+  <section class="cheatSheet hide">
     <div class="flag">
       <img class="" src="img/Semaphore_Alpha.svg" alt="1">
       <caption>1</caption>
@@ -62,51 +63,80 @@
       <img class="" src="img/Semaphore_Kilo.svg" alt="0">
       <caption>0</caption>
     </div>
-
-  </div>
-
-
-  <div class="quiz">
-    <div class="quizImages">
+    <div class="close" onclick="toggleCheatSheet()">
+      <img src="img/close.svg">
+    </div>
+  </section>
+  <section class="quiz">
+<div class="quiz__level">
+  <label>
+    <input type="radio" name="level" id="level-1" data-speed="800" onchange="changeSpeed(this.dataset.speed)" checked>
+    Level 1
+  </label>
+  <label>
+    <input type="radio" name="level" id="level-2" data-speed="500" onchange="changeSpeed(this.dataset.speed)">
+    Level 2
+  </label>
+  <label>
+    <input type="radio" name="level" id="level-3" data-speed="300" onchange="changeSpeed(this.dataset.speed)">
+    Level 3
+  </label>
+  <label>
+    <input type="radio" name="level" id="level-4" data-speed="100" onchange="changeSpeed(this.dataset.speed)">
+    Level 4
+  </label>
+</div>
+    <div class="quiz__images">
       <img src="img/Semaphore_Ready.svg" alt="ready">
     </div>
-    <button onclick="handleGenerateQuiz()">Start</button>
-  </div>
-  <div class="answers">
+    <button class="btn" onclick="handleGenerateQuiz()">Start</button>
+  </section>
+  <section class="answers">
+
+    <div class="answers__inputs">
     <input
-      class="answer"
+      class="answers__input"
       type="number"
       maxlength="1"
       id="answer-1"
       onkeyup="jump(this,this.value)"
       onfocus="this.select()"
-      tabindex="1" >
+      tabindex="1"
+      disabled>
     <input
-      class="answer"
+      class="answers__input"
       type="number"
       maxlength="1"
       id="answer-2"
       onkeyup="jump(this,this.value)"
       onfocus="this.select()"
-      tabindex="2">
+      tabindex="2"
+      disabled>
     <input
-      class="answer"
+      class="answers__input"
       type="number"
       maxlength="1"
       id="answer-3"
       onkeyup="jump(this,this.value)"
       onfocus="this.select()"
-      tabindex="3">
+      tabindex="3"
+      disabled>
     <input
-      class="answer"
+      class="answers__input"
       type="number"
       maxlength="1"
       id="answer-4"
       onkeyup="jump(this,this.value)"
       onfocus="this.select()"
-      tabindex="4">
-  </div>
-  <button onclick="handleCheckAnswer()">Check</button>
+      tabindex="4"
+      disabled>
+    </div>
+    <div class="answers__buttons">
+      <button class="btn" onclick="handleCheckAnswer()">Check</button>
+      <!-- <button class="btn" onclick="handlePlayInput()">Play</button> -->
+    </div>
+    </section>
+</div>
 <script src="app.js"></script>
 </body>
 </html>
